@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../../database');
+const db = require('../db/professionals');
 
 router.get('/:id', async (req, res) => {
     const professionals = await db.selectProfessional(req.params.id);
