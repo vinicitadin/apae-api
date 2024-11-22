@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const professionalsRoutes = require('./professionalsRoutes');
+const alunosRoutes = require('./alunosRoutes')
 
 router.use(express.json());
-router.use('/professionals', professionalsRoutes);
+router.use('/alunos', alunosRoutes);
 
 module.exports = router;
