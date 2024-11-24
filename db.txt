@@ -1,0 +1,111 @@
+-- Tabela de Alunos
+CREATE TABLE alunos (
+    id_aluno SERIAL PRIMARY KEY,
+    nome_aluno VARCHAR(100),
+    data_nascimento DATE,
+    matricula VARCHAR(50),
+    contato_responsavel VARCHAR(100),
+    diagnostico VARCHAR(255)
+);
+
+-- Tabela de Especialidades
+CREATE TABLE especialidades (
+    id_especialidade SERIAL PRIMARY KEY,
+    nome_especialidade VARCHAR(100)
+);
+
+-- Tabela de Funcionários
+CREATE TABLE funcionarios (
+    id_funcionario SERIAL PRIMARY KEY,
+    nome_funcionario VARCHAR(100),
+    id_especialidade INT REFERENCES especialidades(id_especialidade),
+    disponibilidade JSONB
+);
+
+-- Tabela de Agendamentos
+CREATE TABLE agendamentos (
+    id_agendamento SERIAL PRIMARY KEY,
+    id_aluno INT REFERENCES alunos(id_aluno),
+    id_funcionario INT REFERENCES funcionarios(id_funcionario),
+    data_agendamento DATE,
+    hora_inicio TIME,
+    hora_fim TIME,
+    tipo_atendimento VARCHAR(50)
+);
+
+-- Tabela de Frequencia
+CREATE TABLE frequencia (
+    id_frequencia SERIAL PRIMARY KEY,
+    id_aluno INT REFERENCES alunos(id_aluno),
+    id_agendamento INT REFERENCES agendamentos(id_agendamento),
+    presenca BOOLEAN
+);
+
+-- Tabela Login Professores
+CREATE TABLE login_professores (
+    id_professor int,
+	FOREIGN KEY (id_professor) REFERENCES funcionarios(id_funcionario),
+	username VARCHAR(50) UNIQUE NOT NULL,
+	email VARCHAR(100) UNIQUE NOT NULL,
+	password VARCHAR(255) NOT NULL
+);
+
+-- Tabela Login Alunos
+CREATE TABLE login_alunos (
+    id_aluno int,
+	FOREIGN KEY (id_aluno) REFERENCES alunos(id_aluno),
+	username VARCHAR(50) UNIQUE NOT NULL,
+	email VARCHAR(100) UNIQUE NOT NULL,
+	password VARCHAR(255) NOT NULL
+);
+
+-- Inserir especialidades
+INSERT INTO especialidades (nome_especialidade) 
+VALUES 
+('Fonoaudiologia'), 
+('Terapia Ocupacional'), 
+('Psicomotricidade'), 
+('Fisioterapia');
+
+-- Inserir funcionários com especialidade e disponibilidade
+INSERT INTO funcionarios (nome_funcionario, id_especialidade, disponibilidade) 
+VALUES 
+('Pedagoga 01', NULL, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}'),
+('Fono 01', 1, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}'),
+('T.O. 01', 2, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}'),
+('Psicomotricidade 01', 3, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}'),
+('Fisioterapeuta 01', 4, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}');
+
+CREATE OR REPLACE FUNCTION verificar_disponibilidade(id_funcionario INT, data_agendamento DATE, hora_inicio TIME, hora_fim TIME)
+RETURNS BOOLEAN AS $$
+DECLARE
+    conflitos INT;
+BEGIN
+    SELECT COUNT(*) INTO conflitos
+    FROM agendamentos
+    WHERE id_funcionario = id_funcionario
+    AND data_agendamento = data_agendamento
+    AND (hora_inicio, hora_fim) OVERLAPS (hora_inicio, hora_fim);
+
+    IF conflitos > 0 THEN
+        RETURN FALSE;  -- Horário indisponível
+    ELSE
+        RETURN TRUE;   -- Horário disponível
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION validar_agendamento()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NOT verificar_disponibilidade(NEW.id_funcionario, NEW.data_agendamento, NEW.hora_inicio, NEW.hora_fim) THEN
+        RAISE EXCEPTION 'Horário indisponível para o funcionário %', NEW.id_funcionario;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_validar_agendamento
+BEFORE INSERT ON agendamentos
+FOR EACH ROW
+EXECUTE FUNCTION validar_agendamento();
