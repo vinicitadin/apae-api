@@ -41,10 +41,10 @@ CREATE TABLE frequencia (
     presenca BOOLEAN
 );
 
--- Tabela Login Professores
-CREATE TABLE login_professores (
-    id_professor int,
-	FOREIGN KEY (id_professor) REFERENCES funcionarios(id_funcionario),
+-- Tabela Login Funcionários
+CREATE TABLE login_funcionarios(
+    id_funcionarios int,
+	FOREIGN KEY (id_funcionarios) REFERENCES funcionarios(id_funcionario),
 	username VARCHAR(50) UNIQUE NOT NULL,
 	email VARCHAR(100) UNIQUE NOT NULL,
 	password VARCHAR(255) NOT NULL
