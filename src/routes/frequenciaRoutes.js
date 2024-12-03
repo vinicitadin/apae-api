@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db/agendamentos');
+const db = require('../db/frequencia');
 
 router.get('/:id', async (req, res) => {
     const frequencia = await db.selectFrequencia(req.params.id);
