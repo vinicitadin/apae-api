@@ -76,21 +76,21 @@ VALUES
 ('Psicomotricidade 01', 3, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}'),
 ('Fisioterapeuta 01', 4, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}');
 
-CREATE OR REPLACE FUNCTION verificar_disponibilidade(funcionario_id INT, data_agendamento DATE, hora_inicio TIME, hora_fim TIME)
+CREATE OR REPLACE FUNCTION verificar_disponibilidade(funcionario_id INT, p_data_agendamento DATE, p_hora_inicio TIME, p_hora_fim TIME)
 RETURNS BOOLEAN AS $$
 DECLARE
     conflitos INT;
 BEGIN
     SELECT COUNT(*) INTO conflitos
-    FROM agendamentos
-    WHERE id_funcionario = funcionario_id  -- Agora faz referência ao parâmetro
-    AND data_agendamento = data_agendamento
-    AND (hora_inicio, hora_fim) OVERLAPS (hora_inicio, hora_fim);
+    FROM agendamentos a
+    WHERE a.id_funcionario = funcionario_id 
+    AND a.data_agendamento = p_data_agendamento  
+    AND (a.hora_inicio, a.hora_fim) OVERLAPS (p_hora_inicio, p_hora_fim); 
 
     IF conflitos > 0 THEN
-        RETURN FALSE;  -- Horário indisponível
+        RETURN FALSE; 
     ELSE
-        RETURN TRUE;   -- Horário disponível
+        RETURN TRUE; 
     END IF;
 END;
 $$ LANGUAGE plpgsql;
