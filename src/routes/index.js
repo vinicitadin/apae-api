@@ -13,6 +13,6 @@ router.use('/funcionarios', funcionariosRoutes);
 router.use('/loginAlunos', loginAlunosRoutes);
 router.use('/loginFuncionarios', loginFuncionariosRoutes);
 router.use('/agendamentos', agendamentosRoutes);
-routes.use('/frequencias', frequenciasRoutes);
+router.use('/frequencias', frequenciasRoutes);
 
 module.exports = router;
