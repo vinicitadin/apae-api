@@ -7,38 +7,38 @@ router.get('/:id', async (req, res) => {
     res.json(frequencia);
 });
 
-router.get('/:aluno', async (req, res) => {
-    const alunos = await db.selectAluno(req.params.aluno);
-    res.json(alunos);
-});
+// router.get('/:aluno', async (req, res) => {
+//     const alunos = await db.selectAluno(req.params.aluno);
+//     res.json(alunos);
+// });
 
-router.get('/:agendamento', async (req, res) => {
-    const agendamentos = await db.selectAgendamento(req.params.agendamento);
-    res.json(agendamentos);
-});
+// router.get('/:agendamento', async (req, res) => {
+//     const agendamentos = await db.selectAgendamento(req.params.agendamento);
+//     res.json(agendamentos);
+// });
 
-router.get('/:presenca', async (req, res) => {
-    const presenca = await db.selectPresenca(req.params.presenca);
-    res.json(presenca);
-});
+// router.get('/:presenca', async (req, res) => {
+//     const presenca = await db.selectPresenca(req.params.presenca);
+//     res.json(presenca);
+// });
 
 router.get('/', async (req, res) => {
-    const agendamentos = await db.selectAgendamento();
+    const agendamentos = await db.selectFrequencias();
     res.json(agendamentos);
 });
 
 router.post('/', async (req, res) => {
-    await db.insertAgendamento(req.body);
+    await db.insertFrequencia(req.body);
     res.sendStatus(201);
 });
 
 router.put('/:id', async (req, res) => {
-    await db.updateAgendamento(req.params.id, req.body);
+    await db.updateFrequencia(req.params.id, req.body);
     res.sendStatus(200);
 });
 
 router.delete('/:id', async (req, res) => {
-    await db.deleteAgendamento(req.params.id);
+    await db.deleteFrequencia(req.params.id);
     res.sendStatus(204);
 });
 
