@@ -14,8 +14,9 @@ async function selectFuncionarios() {
 
 async function selectFuncionario(id) {
     const client = await db.connect();
+    const sql = "SELECT * FROM funcionarios p INNER JOIN especialidades e ON p.id_funcionario = e.id_especialidade WHERE id_funcionario=$1";
     try {
-        const res = await client.query("SELECT * FROM funcionarios WHERE id_funcionario=$1", [id]);
+        const res = await client.query(sql, [id]);
         return res.rows;
     } catch (error) {
         console.error('Erro ao consultar funcionário:', error);
