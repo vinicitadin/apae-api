@@ -3,7 +3,7 @@ const db = require('../../database');
 async function selectFuncionarios() {
     const client = await db.connect();
     try {
-        const res = await client.query("SELECT * FROM funcionarios");
+        const res = await client.query("SELECT * FROM funcionarios p INNER JOIN especialidades e ON p.id_funcionario = e.id_especialidade");
         return res.rows;
     } catch (error) {
         console.error('Erro ao consultar funcionários:', error);
