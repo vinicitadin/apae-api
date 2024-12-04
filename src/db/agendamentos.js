@@ -50,7 +50,7 @@ async function insertAgendamento(agendamento) {
 
 async function deleteAgendamento(id) {
     const client = await db.connect();
-    const sql = "DELETE FROM agendamento WHERE id_agendamento=$1";
+    const sql = "DELETE FROM agendamentos WHERE id_agendamento=$1";
     try {
         await client.query(sql, [id]);
     } catch (error) {
