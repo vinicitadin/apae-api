@@ -3,7 +3,7 @@ const db = require('../../database');
 async function selectFrequencias() {
     const client = await db.connect();
     try {
-        const res = await client.query("SELECT * FROM frequencias");
+        const res = await client.query("SELECT * FROM frequencia");
         return res.rows;
     } catch (error) {
         console.error('Erro ao consultar frequencias:', error);
@@ -15,7 +15,7 @@ async function selectFrequencias() {
 async function selectFrequencia(id) {
     const client = await db.connect();
     try {
-        const res = await client.query("SELECT * FROM frequencias WHERE id_frequencia=$1", [id]);
+        const res = await client.query("SELECT * FROM frequencia WHERE id_frequencia=$1", [id]);
         return res.rows;
     } catch (error) {
         console.error('Erro ao consultar frequencia:', error);
@@ -26,7 +26,7 @@ async function selectFrequencia(id) {
 
 async function insertFrequencia(frequencia) {
     const client = await db.connect();
-    const sql = "INSERT INTO frequencias(id_aluno, id_agendamento, presenca) VALUES ($1, $2, $3)";
+    const sql = "INSERT INTO frequencia(id_aluno, id_agendamento, presenca) VALUES ($1, $2, $3)";
     try {
         await client.query(sql, [frequencia.id_aluno, frequencia.id_agendamento, frequencia.presenca]);
     } catch (error) {
