@@ -59,6 +59,17 @@ CREATE TABLE login_alunos (
 	password VARCHAR(255) NOT NULL
 );
 
+-- Preenchendo o banco com inserts
+
+-- Inserir alunos
+INSERT INTO alunos(nome_aluno, data_nascimento, matricula, contato_responsavel, diagnostico)
+VALUES 
+('João da Silva', '2010-04-15', '1234567', '(48) 98765-4321', 'Transtorno do Espectro Autista (TEA)'),
+('Maria Oliveira', '2011-08-22', '2345678', '(48) 99876-5432', 'Deficiência Intelectual Moderada'),
+('Pedro Souza', '2012-02-10', '3456789', '(48) 97654-32102', 'Dislexia'),
+('Ana Costa', '2009-12-30', '4567890', '(48) 98765-0012', 'Síndrome de Down'),
+('Lucas Pereira', '2013-05-18', '5678901', '(48) 93456-7890', 'Paralisia Cerebral');
+
 -- Inserir especialidades
 INSERT INTO especialidades (nome_especialidade) 
 VALUES 
@@ -70,11 +81,45 @@ VALUES
 -- Inserir funcionários com especialidade e disponibilidade
 INSERT INTO funcionarios (nome_funcionario, id_especialidade, disponibilidade) 
 VALUES 
-('Pedagoga 01', NULL, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}'),
-('Fono 01', 1, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}'),
-('T.O. 01', 2, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}'),
-('Psicomotricidade 01', 3, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}'),
-('Fisioterapeuta 01', 4, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}');
+('Isabela Santos', 1, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}'),
+('Camila Oliveira', 1, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}'),
+('Ana Luiza Silva', 2, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}'),
+('Mariana Costa', 3, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}'),
+('Juliana Pereira', 4, '{"dias": ["SEG", "TER", "QUA", "QUI", "SEX"], "periodos": ["M", "V"]}');
+
+-- Inserir agendamentos
+INSERT INTO agendamentos(id_aluno, id_funcionario, data_agendamento, 
+hora_inicio, hora_fim, tipo_atendimento)
+VALUES
+(4, 5, '2024-11-27', '09:30', '11:00', 'Fisioterapia'),
+(1, 5, '2024-11-20', '08:30', '09:30', 'Fisioterapia'),
+(3, 1, '2024-12-19', '15:30', '16:30', 'Fono'),
+(4, 2, '2024-12-18', '14:00', '14:30', 'Fono'),
+(2, 3, '2024-12-09', '15:00', '16:00', 'Terapia Ocupacional');
+
+-- Inserir frequencia
+INSERT INTO frequencia(id_aluno, id_agendamento, presenca)
+VALUES
+(4, 1, TRUE),
+(1, 2, TRUE);
+
+-- Inserir login de alunos
+INSERT INTO login_alunos(id_aluno, username, email, password)
+VALUES
+(1, 'joaos', 'joao@gmail.com', '123joao'),
+(2, 'mariaoli', 'maria@gmail.com', '123ma'),
+(3, 'pedros', 'pedro@gmail.com', '123pe'),
+(4, 'anac', 'ana@gmail.com', '123ana'),
+(5, 'lucasp', 'lucas@gmail.com', '123lu');
+
+-- Inserir login funcionarios
+INSERT INTO login_funcionarios(id_funcionarios, username, email, password)
+VALUES
+(1, 'isabelasan', 'isabela@gmail.com', '123isa'),
+(2, 'camilaoli', 'camila@gmail.com', '123cam'),
+(3, 'analu', 'analuiza@gmail.com', '123ana'),
+(4, 'marianac', 'mariana@gmail.com', '123mari'),
+(5, 'julianap', 'juliana@gmail.com', '123juli');
 
 CREATE OR REPLACE FUNCTION verificar_disponibilidade(funcionario_id INT, p_data_agendamento DATE, p_hora_inicio TIME, p_hora_fim TIME)
 RETURNS BOOLEAN AS $$
